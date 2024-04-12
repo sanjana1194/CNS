@@ -1,68 +1,62 @@
-/*package whatever //do not write package name here */
-import java.io.*;
+// Java Program to Implement the RSA Algorithm
 import java.math.*;
 import java.util.*;
-/*
-* Java program for RSA asymmetric cryptographic algorithm.
-* For demonstration, values are
-* relatively small compared to practical application
-*/
-public class RSA {
-	public static double gcd(double a, double h)
-	{
-		/*
-		* This function returns the gcd or greatest common
-		* divisor
-		*/
-		double temp;
-		while (true) {
-			temp = a % h;
-			if (temp == 0)
-				return h;
-			a = h;
-			h = temp;
-		}
-	}
-	public static void main(String[] args)
-	{
-		double p = 3;
-		double q = 7;
 
-		// Stores the first part of public key:
-		double n = p * q;
+class RSA {
+	public static void main(String args[])
+	{
+		int p, q, n, z, d = 0, e, i;
 
-		// Finding the other part of public key.
-		// double e stands for encrypt
-		double e = 2;
-		double phi = (p - 1) * (q - 1);
-		while (e < phi) {
-			/*
-			* e must be co-prime to phi and
-			* smaller than phi.
-			*/
-			if (gcd(e, phi) == 1)
+		// The number to be encrypted and decrypted
+		int msg = 12;
+		double c;
+		BigInteger msgback;
+
+		// 1st prime number p
+		p = 3;
+
+		// 2nd prime number q
+		q = 11;
+		n = p * q;
+		z = (p - 1) * (q - 1);
+		System.out.println("the value of z = " + z);
+
+		for (e = 2; e < z; e++) {
+
+			// e is for public key exponent
+			if (gcd(e, z) == 1) {
 				break;
-			else
-				e++;
+			}
 		}
-		int k = 2; // A constant value
-		double d = (1 + (k * phi)) / e;
+		System.out.println("the value of e = " + e);
+		for (i = 0; i <= 9; i++) {
+			int x = 1 + (i * z);
 
-		// Message to be encrypted
-		double msg = 12;
+			// d is for private key exponent
+			if (x % e == 0) {
+				d = x / e;
+				break;
+			}
+		}
+		System.out.println("the value of d = " + d);
+		c = (Math.pow(msg, e)) % n;
+		System.out.println("Encrypted message is : " + c);
 
-		System.out.println("Message data = " + msg);
+		// converting int value of n to BigInteger
+		BigInteger N = BigInteger.valueOf(n);
 
-		// Encryption c = (msg ^ e) % n
-		double c = Math.pow(msg, e);
-		c = c % n;
-		System.out.println("Encrypted data = " + c);
+		// converting float value of c to BigInteger
+		BigInteger C = BigDecimal.valueOf(c).toBigInteger();
+		msgback = (C.pow(d)).mod(N);
+		System.out.println("Decrypted message is : "
+						+ msgback);
+	}
 
-		// Decryption m = (c ^ d) % n
-		double m = Math.pow(c, d);
-		m = m % n;
-		System.out.println("Original Message Sent = " + m);
+	static int gcd(int e, int z)
+	{
+		if (e == 0)
+			return z;
+		else
+			return gcd(z % e, e);
 	}
 }
-
-// This code is contributed by Pranay Arora.
