@@ -7,7 +7,7 @@ import java.util.*;
 * For demonstration, values are
 * relatively small compared to practical application
 */
-public class GFG {
+public class RSA {
 	public static double gcd(double a, double h)
 	{
 		/*
